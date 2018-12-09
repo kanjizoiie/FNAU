@@ -80,15 +80,9 @@ else:
             end_time = time.time()
 
             print(pred)
+            print(inv_classes[int(numpy.rint(pred))])
 
-            # Show the image captured from the webcam
-            cv2.imshow("preview", frame)
-            # Wait for a keypress.
-            key = cv2.waitKey(20)
-            # If ESC key is pressed exit the program.
-            if key == 27:  # exit on ESC
-                shutdown = False
-                break
 
 vc.release()
-cv2.destroyWindow("preview")
+if platform.system().lower() == "windows":
+    cv2.destroyWindow("preview")
