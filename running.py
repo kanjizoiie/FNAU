@@ -1,12 +1,9 @@
 import time
 import model
 import platform
-from matplotlib.image import imread
-from scipy.misc import imresize
 import tensorflow as tf
 import cv2
 import numpy
-import threading
 
 sess = tf.Session(config = tf.ConfigProto(log_device_placement=True))
 shutdown = False
@@ -16,7 +13,8 @@ m.create()
 m.compile()
 m.load("25_epochs.h5")
 
-vc = cv2.VideoCapture(0)
+vc = cv2.VideoCapture()
+vc.open("http://192.168.0.100:8080/video")
 
 if vc.isOpened(): # try to get the first frame
     rval, frame = vc.read()
@@ -34,7 +32,7 @@ if platform.system().lower() == "windows":
 
         # Time the pre processing
         start_processing_time = time.clock()
-        img_resize = imresize(frame, (64, 64))
+        img_resize = cv2.resize(frame, (64, 64))
         img_reshaped = img_resize.reshape([1, 64, 64, 3])
         img_divided = img_reshaped / 255
         end_processing_time = time.clock()
@@ -47,11 +45,11 @@ if platform.system().lower() == "windows":
 
 
         print(pred)
-
+        print(inv_classes[int(numpy.rint(pred))])
 
 
         # Show the image captured from the webcam
-        cv2.imshow(inv_classes[int(numpy.rint(pred))], frame)
+        cv2.imshow("preview", frame)
         # Wait for a keypress.
         key = cv2.waitKey(20)
         # If ESC key is pressed exit the program.
@@ -70,7 +68,7 @@ else:
 
             # Time the pre processing
             start_processing_time = time.time()
-            img_resize = imresize(frame, (64, 64))
+            img_resize = cv2.resize(frame, (64, 64))
             img_reshaped = img_resize.reshape([1, 64, 64, 3])
             img_divided = img_reshaped / 255
             end_processing_time = time.time()
