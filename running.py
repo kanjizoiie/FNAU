@@ -28,64 +28,63 @@ else:
 p = platform.system().lower()
 print(m.classes())
 inv_classes = dict(map(reversed, m.classes().items()))
+for rounds in range(0, 5):
+    print("ROUND ", rounds)
+    for i in range(0, 2000):
+        # Special function for windows because python does not have high precision timer in this version (3.6.6)
+        if p == "windows":
+            # Read the data.
+            rval, frame = vc.read()
 
-while not (shutdown):
-    # Special function for windows because python does not have high precision timer in this version (3.6.6)
-    if p == "windows":
-        # Read the data.
-        rval, frame = vc.read()
+            # Time the pre processing
+            start_processing_time = time.clock()
+            img_resize = cv2.resize(frame, (64, 64))
+            img_reshaped = img_resize.reshape([1, 64, 64, 3])
+            img_divided = img_reshaped / 255
+            end_processing_time = time.clock()
 
-        # Time the pre processing
-        start_processing_time = time.clock()
-        img_resize = cv2.resize(frame, (64, 64))
-        img_reshaped = img_resize.reshape([1, 64, 64, 3])
-        img_divided = img_reshaped / 255
-        end_processing_time = time.clock()
+            # Time the prediction
+            start_time = time.clock()
+            # TODO: implement prediction function here [X]
+            pred = m.predict(img_divided)
+            end_time = time.clock()
 
-        # Time the prediction
-        start_time = time.clock()
-        # TODO: implement prediction function here [X]
-        pred = m.predict(img_divided)
-        end_time = time.clock()
+            print("Prediction: ", pred)
+            print("Prediction class: ", inv_classes[int(numpy.rint(pred))])
 
-        print("Prediction: ", pred)
-        print("Prediction class: ", inv_classes[int(numpy.rint(pred))])
-
-        # Show the image captured from the webcam
-        cv2.imshow("preview", frame)
-        # Wait for a keypress.
-        key = cv2.waitKey(20)
-        # If ESC key is pressed exit the program.
-        if key == 27:  # exit on ESC
-            shutdown = False
-            break
+            # Show the image captured from the webcam
+            cv2.imshow("preview", frame)
+            # Wait for a keypress.
+            key = cv2.waitKey(20)
+            # If ESC key is pressed exit the program.
 
 
-    # The normal way to implement a timing function on other platforms.
-    else:
-        # Read the data.
-        rval, frame = vc.read()
+        # The normal way to implement a timing function on other platforms.
+        else:
+            # Read the data.
+            rval, frame = vc.read()
 
-        # Time the pre processing
-        start_processing_time = time.time()
-        img_resize = cv2.resize(frame, (64, 64))
-        img_reshaped = img_resize.reshape([1, 64, 64, 3])
-        img_divided = img_reshaped / 255
-        end_processing_time = time.time()
+            # Time the pre processing
+            start_processing_time = time.time()
+            img_resize = cv2.resize(frame, (64, 64))
+            img_reshaped = img_resize.reshape([1, 64, 64, 3])
+            img_divided = img_reshaped / 255
+            end_processing_time = time.time()
 
-        # Time the prediction
-        start_time = time.time()
-        # TODO: implement prediction function here [X]
-        pred = m.predict(img_divided)
-        end_time = time.time()
+            # Time the prediction
+            start_time = time.time()
+            # TODO: implement prediction function here [X]
+            pred = m.predict(img_divided)
+            end_time = time.time()
 
-        print("Prediction: ", pred)
-        print("Prediction class: ", inv_classes[int(numpy.rint(pred))])
+            print("Prediction: ", pred)
+            print("Prediction class: ", inv_classes[int(numpy.rint(pred))])
 
-    processing_time_elapsed = end_processing_time - start_processing_time
-    time_elapsed = end_time - start_time
-    processing_time_list.append(processing_time_elapsed)
-    time_list.append(time_elapsed)
+processing_time_elapsed = end_processing_time - start_processing_time
+time_elapsed = end_time - start_time
+processing_time_list.append(processing_time_elapsed)
+time_list.append(time_elapsed)
+
 vc.release()
 if p == "windows":
     cv2.destroyWindow("preview")
