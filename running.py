@@ -51,13 +51,16 @@ for rounds in range(0, 5):
 
             print("Prediction: ", pred)
 
+            processing_time_elapsed = end_processing_time - start_processing_time
+            time_elapsed = end_time - start_time
+            processing_time_list.append(processing_time_elapsed)
+            time_list.append(time_elapsed)
+
             # Show the image captured from the webcam
             cv2.imshow("preview", frame)
             # Wait for a keypress.
             key = cv2.waitKey(20)
             # If ESC key is pressed exit the program.
-
-
         # The normal way to implement a timing function on other platforms.
         else:
             # Read the data.
@@ -78,10 +81,10 @@ for rounds in range(0, 5):
 
             print("Prediction: ", pred)
 
-processing_time_elapsed = end_processing_time - start_processing_time
-time_elapsed = end_time - start_time
-processing_time_list.append(processing_time_elapsed)
-time_list.append(time_elapsed)
+            processing_time_elapsed = end_processing_time - start_processing_time
+            time_elapsed = end_time - start_time
+            processing_time_list.append(processing_time_elapsed)
+            time_list.append(time_elapsed)
 
 vc.release()
 if p == "windows":
@@ -90,6 +93,8 @@ if p == "windows":
 average_processing_time = numpy.average(processing_time_list)
 average_time = numpy.average(time_list)
 
+print(processing_time_list)
+print(time_list)
 
 stdd_processing_time = numpy.std(processing_time_list, dtype=numpy.float64)
 stdd_time = numpy.std(time_list, dtype=numpy.float64)
