@@ -3,7 +3,7 @@ import model
 
 sess = tf.Session(config = tf.ConfigProto(log_device_placement=True))
 
-m = model.model()
+m = model.food_model()
 
 m.create()
 m.compile()

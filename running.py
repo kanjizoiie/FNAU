@@ -15,7 +15,7 @@ shutdown = False
 m = model.food_model()
 m.create()
 m.compile()
-m.load("25_epochs.h5")
+m.load("weights.h5")
 
 vc = cv2.VideoCapture()
 vc.open("http://192.168.0.178:8080/video")
@@ -30,7 +30,7 @@ print(m.classes())
 inv_classes = dict(map(reversed, m.classes().items()))
 for rounds in range(0, 5):
     print("ROUND ", rounds)
-    for i in range(0, 2000):
+    for i in range(0, 500):
         # Special function for windows because python does not have high precision timer in this version (3.6.6)
         if p == "windows":
             # Read the data.
@@ -50,7 +50,6 @@ for rounds in range(0, 5):
             end_time = time.clock()
 
             print("Prediction: ", pred)
-            print("Prediction class: ", inv_classes[int(numpy.rint(pred))])
 
             # Show the image captured from the webcam
             cv2.imshow("preview", frame)
@@ -78,7 +77,6 @@ for rounds in range(0, 5):
             end_time = time.time()
 
             print("Prediction: ", pred)
-            print("Prediction class: ", inv_classes[int(numpy.rint(pred))])
 
 processing_time_elapsed = end_processing_time - start_processing_time
 time_elapsed = end_time - start_time
