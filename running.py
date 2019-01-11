@@ -91,8 +91,8 @@ average_processing_time = numpy.average(processing_time_list)
 average_time = numpy.average(time_list)
 
 
-stdd_processing_time = numpy.std(processing_time_list)
-stdd_time = numpy.std(time_list)
+stdd_processing_time = numpy.std(processing_time_list, dtype=numpy.float64)
+stdd_time = numpy.std(time_list, dtype=numpy.float64)
 
 print("Average Processing time: ", average_processing_time, " ms")
 print("STD deviation processing time: ",  stdd_processing_time, " ms")
